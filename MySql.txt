@@ -1,0 +1,47 @@
+#FIX AUTO INCREMENT ID COLUMN###
+SET @autoid:=0;
+UPDATE `table_name` SET `ID` = @autoid := (@autoid+1);
+ALTER TABLE `table_name` AUTO_INCREMENT = 1;
+#END
+
+###SET NEXT AUTO INCREMENT ID COLUMN###
+ALTER TABLE `table_name` AUTO_INCREMENT= 1; #Next number you want
+#END
+
+#UPDATE LISTING (ACCOUNT_ID) From user Account table
+#Update count in column base in related column in other table (ID) for example
+# We need to find matching group between the 2 table, if no relation, we can just
+#clone the second table id and use it as relation with the firest table (GROUP BY)
+UPDATE `3t0m_listings` 
+   SET `Account_ID` = (
+       SELECT `ID` 
+         FROM `3t0m_accounts` 
+        WHERE 3t0m_listings.Account_ID = 3t0m_accounts.user_id
+        GROUP BY id
+       );
+#End
+
+#Multiple values based on multiple CAT_ID selection
+SELECT * FROM `table_name` WHERE `Category_ID` IN (
+		81,80,79,78,77,76,74,75,82,83,84,85,86,87,88,89,90,91,92,93
+				)
+#End
+
+#UPDATE LISTINGS (COUNT) By USER Account#
+UPDATE `target_table_name` #Source table need to be updated with the count
+   SET `coulmn_need_to_be_updated_with_count` = (
+       SELECT COUNT(source_column_name_has_the_count_ids)
+        FROM `source_table_name`
+        WHERE source_table_name.Account_ID = target_table_name.Account_ID #Relation column, if not exsist, count is not logical
+	GROUP BY `grouped_by_column_nane` #If no relation with this coulmn between source/target table, we need to creat one 
+       );
+#End
+
+#UPDATE LISTING (COUNT) By Category#
+#Same as above == No GROUP BY
+UPDATE `target_table_name` 
+	SET `coulmn_need_to_be_updated_with_count` = (
+        SELECT COUNT(source_column_name_has_the_count_ids)
+        FROM source_table_name.Account_ID 
+        WHERE source_table_name.Account_ID = target_table_name.Account_ID #Relation column, if not exsist, count is not logical
+    )
